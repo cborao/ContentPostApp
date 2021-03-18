@@ -20,31 +20,50 @@ class contentApp (webapp.webApp):
     with the web content."""
 
     # Declare and initialize content
-    content = {'/': 'Root page',
+    content: dict = {'/': 'Root page',
                '/page': 'A page'
                }
 
     def parse(self, request):
         """Return the resource name (including /)"""
 
-        return request.split(' ', 2)[1]
+        method = request.split(' ', 2)[0]
+        #print(method)
+        resource = request.split(' ', 2)[1]
+        #print(resource)
+        index = request.find('\r\n\r\n')
+        body = request[index:]
+        #print(body)
 
-    def process(self, resourceName):
-        """Process the relevant elements of the request.
+        return method, resource, body
 
-        Finds the HTML text corresponding to the resource name,
-        ignoring requests for resources not in the dictionary.
-        """
+    def process(self, parsedRequest):
 
-        if resourceName in self.content.keys():
+        (method, resource, body) = parsedRequest
+
+        print (self.content)
+        if method == "GET":
+            if resource in self.content:
+                httpCode = "200 OK"
+                htmlBody = "<html><body>" + self.content[resource] \
+                    + "</body></html>"
+            else:
+                httpCode = "404 Not Found"
+                htmlBody = "Not Found"
+
+        if method == "POST":
+            idx = body.find('newcontent')
+            parsedbody = body[idx:]
+            info = parsedbody.split('=')[1]
+            print("El nuevo recurso es: " + info)
+            info =  '/'+ info
+            self.content[info] = info
+
             httpCode = "200 OK"
-            htmlBody = "<html><body>" + self.content[resourceName] \
-                + "</body></html>"
-        else:
-            httpCode = "404 Not Found"
-            htmlBody = "Not Found"
-        return (httpCode, htmlBody)
+            htmlBody = "<html><body> Resource " + self.content[info] \
+                       + " added</body></html>"
 
+        return (httpCode, htmlBody)
 
 if __name__ == "__main__":
     testWebApp = contentApp("localhost", 1234)
