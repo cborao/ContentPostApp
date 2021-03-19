@@ -37,7 +37,7 @@ class contentApp (webapp.webApp):
         resource = request.split(' ', 2)[1]
 
         # We locate the start of the request body
-        index = request.find('\r\n\r\n')
+        index = request.find('\r\n\r\n') + len('\r\n\r\n')
         body = request[index:]
 
         return method, resource, body
@@ -61,15 +61,12 @@ class contentApp (webapp.webApp):
 
         # if it is a POST request, we want to add content to the dictionary
         if method == "POST":
-            # we seach the new resouce inside the body
-            idx = body.find('newcontent')
-            parsedbody = body[idx:]
 
             # info is the new resource we want to add to our dictionary
             # notice that we always add the '/' before (we suposse that the user
             # always type and submit the resource to add without the '/')
 
-            info = '/' + parsedbody.split('=')[1]
+            info = '/' + body.split('=')[1]
 
             # add the new resource into the dictionary
             self.content[info] = info + ' page'
