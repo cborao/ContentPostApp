@@ -4,7 +4,7 @@
  contentPostApp
  Simple web application for managing content: get and post.
 
- Author: César Borao CoratinosJesus
+ Author: César Borao Coratinos
  Date: March 2021
 
  Based on "webapp class" and contentapp.py, developed by M. Gonzalez-Barahona
