@@ -14,7 +14,6 @@
 
 import webapp
 
-
 class contentApp (webapp.webApp):
     """Simple web application for managing content.
 
@@ -46,7 +45,6 @@ class contentApp (webapp.webApp):
 
         (method, resource, body) = parsedRequest
 
-        # print (self.content)
         if method == "GET":
             # if the resource is in the dictionary
             if resource in self.content:
@@ -63,7 +61,7 @@ class contentApp (webapp.webApp):
         if method == "POST":
 
             # info is the new resource we want to add to our dictionary
-            # notice that we always add the '/' before (we suposse that the user
+            # note: we always add the '/' before (we suposse that the user
             # always type and submit the resource to add without the '/')
 
             info = '/' + body.split('=')[1]
@@ -74,6 +72,10 @@ class contentApp (webapp.webApp):
             httpCode = "200 OK"
             htmlBody = "<html><body>" + self.content[info] \
                        + " added to the dictionary</body></html>"
+
+        htmlBody = '<html><body><form action="/" method="POST">'\
+            + 'Add resource: <input name="newcontent" type="text" /><input type="submit" value="Submit" /></form></body></html>'\
+            + htmlBody
 
         return (httpCode, htmlBody)
 
